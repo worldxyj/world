@@ -111,7 +111,7 @@ func (this *AdminController) Edit() {
 		tel := this.GetString("tel")
 		type EditValidate struct {
 			Name     string `validate:"required,max=20" vmsg:"请输入正确的用户名"`
-			Password string `validate:"min=6" vmsg:"密码不能小于6位"`
+			Password string `validate:"omitempty,min=6" vmsg:"密码不能小于6位"`
 			Tel      string `validate:"max=11" vmsg:"请输入正确的手机号"`
 		}
 		edit := &EditValidate{
