@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <meta name="description" content="User login page" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>登录 - {{ config "String" "appname" "world" }}</title>
+    <link rel="stylesheet" href="/static/admin/css/admin.css"/>
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="/static/admin/assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="/static/admin/assets/css/font-awesome.css" />
+    <!-- text fonts -->
+    <link rel="stylesheet" href="/static/admin/assets/css/ace-fonts.css" />
+    <!-- ace styles -->
+    <link rel="stylesheet" href="/static/admin/assets/css/ace.css" />
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="/static/admin/assets/css/ace-part2.css" />
+    <![endif]-->
+    <link rel="stylesheet" href="/static/admin/assets/css/ace-rtl.css" />
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="/static/admin/assets/css/ace-ie.css" />
+    <![endif]-->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/static/admin/assets/js/html5shiv.js"></script>
+    <script src="/static/admin/assets/js/respond.js"></script>
+    <![endif]-->
+    <script src="/static/admin/assets/js/jquery.min.js"></script>
+    <script src="/static/admin/assets/js/jquery.validate.js"></script>
+    <script src="/static/admin/assets/js/jquery.form.js"></script>
+
+    <!-- layer -->
+    <script src="/static/common/layer/layer.js"></script>
+    <style>
+        .login-high{ color:#F00;}
+        .login-none{display:none;}
+        .login-container{ position:fixed;top:20%;left:50%;margin-left: -187.5px;}
+    </style>
+</head>
+<body class="login-layout light-login">
+<div class="login-container">
+    <div class="center">
+        <h1>
+            <!--<img class="logo" src="/admin/img/logo.png"/>-->
+            <span style="color:#19A96C;">{{ config "String" "appname" "world" }}后台管理</span>
+
+        </h1>
+    </div>
+    <div class="space-6"></div>
+    <div class="position-relative">
+        <div id="login-box" class="login-box visible widget-box no-border">
+            <div class="widget-body">
+                <div class="widget-main">
+                    <h4 class="header blue lighter bigger">
+                        <i class="ace-icon fa fa-coffee green"></i>
+                        请填写您的用户信息
+                    </h4>
+
+                    <div class="space-6"></div>
+                    <p id="result" class="login-none"></p>
+                    <form id="login" method="post">
+                        {{ .xsrfdata }}
+                        <fieldset>
+                            <label class="block clearfix">
+									<span class="block input-icon input-icon-right">
+										<input type="text" class="form-control" name="name" placeholder="用户名" autocomplete="off"/>
+										<i class="ace-icon fa fa-user"></i>
+									</span>
+                            </label>
+
+                            <label class="block clearfix">
+									<span class="block input-icon input-icon-right">
+										<input type="password" class="form-control" name="password" placeholder="输入密码" autocomplete="new-password"/>
+										<i class="ace-icon fa fa-lock"></i>
+									</span>
+                            </label>
+
+                            <div class="space"></div>
+
+                            <div class="clearfix">
+                                <button type="submit" class="col-sm-12 btn btn-primary">
+                                    <span class="bigger-110">登 录</span>
+                                </button>
+                            </div>
+
+                            <div class="space-4"></div>
+                        </fieldset>
+                    </form>
+                </div><!-- /.widget-main -->
+            </div><!-- /.widget-body -->
+        </div><!-- /.login-box -->
+    </div><!-- /.position-relative -->
+</div>
+<!-- basic scripts -->
+<script type="text/javascript">
+    if('ontouchstart' in document.documentElement) document.write("<script src='admin/assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
+</script>
+<script type="text/javascript">
+    $(function(){
+        var wait;
+        $('#login').ajaxForm({
+            beforeSubmit: function(){
+                $('#result').attr("class", "login-high");
+                if( '' == $.trim($('input[name="name"]').val())){
+                    $('#result').html('请输入用户名').show();
+                    $('input[name="name"]').focus();
+                    return false;
+                }
+                if( '' == $.trim($('input[name="password"]').val())){
+                    $('#result').html('请输入密码').show();
+                    $('input[name="password"]').focus();
+                    return false;
+                }
+                wait = layer.load(2);
+            },
+            complete:function(){
+                layer.close(wait);
+            },
+            success: function(data){
+                if(data.errcode == 0){
+                    window.location.href = "{{urlfor "IndexController.Index"}}";
+                }else{
+                    $('#result').html(data.msg).show();
+                }
+            },
+            error: function(responseText, statusText){
+                if(statusText == 'timeout'){
+                    layer.alert("请求超时");
+                }else{
+                    layer.alert(statusText);
+                }
+            },
+            timeout:30000,
+            dataType: 'json'
+        });
+    });
+</script>
+</body>
+</html>

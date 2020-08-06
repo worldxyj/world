@@ -1,0 +1,47 @@
+{{ template "admin/common/header.html" .}}
+<!-- /section:basics/navbar.layout -->
+<div class="main-container" id="main-container">
+    <!-- #section:basics/sidebar -->
+    {{ template "admin/common/left.html" .}}
+    <!-- /section:basics/sidebar -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div id="sidebar2" class="sidebar h-sidebar navbar-collapse collapse menu-min">
+                <ul class="nav nav-list">
+                    <li class="active">
+                        <a href="#">
+                            <o class="font12">首页</o>
+                        </a>
+                    </li>
+                </ul><!-- /.nav-list -->
+            </div><!-- .sidebar -->
+            <div class="page-content">
+                <div class="infobox infobox-blue">
+                    <div class="infobox-icon">
+                        <i class="ace-icon fa fa-users"></i>
+                    </div>
+
+                    <div class="infobox-data">
+                        <span class="infobox-data-number"><a href="#"></a></span>
+                        <div class="infobox-content">注册学生数</div>
+                    </div>
+                </div>
+                <div class="infobox infobox-green">
+                    <div class="infobox-icon">
+                        <i class="ace-icon fa fa-users"></i>
+                    </div>
+
+                    <div class="infobox-data">
+                        <span class="infobox-data-number"><a href=""></a></span>
+                        <div class="infobox-content">缴费学生人次</div>
+                    </div>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.page-content -->
+    </div>
+    <!--footer-->
+    {{ template "admin/common/footer.html"}}
+</div>  <!-- /.main-content -->
+</div><!-- /.main-container -->
+</body>
+</html>

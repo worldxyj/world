@@ -1,0 +1,147 @@
+{{ template "admin/common/header.html" .}}
+<!-- /section:basics/navbar.layout -->
+<div class="main-container" id="main-container">
+    <!-- #section:basics/sidebar -->
+    {{ template "admin/common/left.html"}}
+    <!-- /section:basics/sidebar -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <!--主题-->
+                <div class="page-header">
+                    <h1>
+                        您当前操作
+                        <small>
+                            <i class="ace-icon fa fa-angle-double-right"></i>
+                            添加管理员
+                        </small>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" method="post">
+                            {{ .Xsrfdata }}
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">用户名</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" name="name" placeholder="用户名必须是以字母开头，数字、符号组合" class="col-xs-10 col-sm-6" autocomplete="off"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">密码</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" name="password" placeholder="密码必须大于6位，小于15位" class="col-xs-10 col-sm-6"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">手机号码</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" name="tel" class="col-xs-10 col-sm-6" maxlength="11"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button class="btn btn-info" type="submit">
+                                        <i class="ace-icon fa fa-check bigger-110"></i>
+                                        保存
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+    {{template "admin/common/footer.html"}}
+</div><!-- /.main-container -->
+<script type="text/javascript">
+    $(function(){
+        $('form').validate({
+            //debug: 'true',
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: true,
+            rules: {
+                name: {required: true},
+                password: {required: true, minlength: 6},
+                tel: {minlength:11, maxlength:11},
+            },
+
+            messages: {
+                role_id: {required: "请选择所属角色"},
+            },
+
+
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.select2')) {
+                    error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+
+            submitHandler: function (form) {
+                $(form).ajaxSubmit({
+                    beforeSubmit: function(){
+                        wait = layer.load(2);
+                    },
+                    complete:function(){
+                        layer.close(wait);
+                    },
+                    success: function(data){
+                        if(data.errcode == 0){
+                            layer.msg(data.msg, {icon:6,time:2000}, function(index){
+                                layer.close(index);
+                                window.location.reload();
+                            });
+                        }else{
+                            layer.msg(data.msg, {icon:5,time:3000}, function(index){
+                                layer.close(index);
+                            });
+                        }
+                    },
+                    error: function(responseText, statusText){
+                        if(statusText=='timeout'){
+                            layer.alert("请求超时");
+                        }else{
+                            layer.alert(statusText);
+                        }
+                    },
+                    timeout: 10000,
+                    dataType: 'json'
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

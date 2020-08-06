@@ -1,0 +1,136 @@
+{{ template "admin/common/header.html" .}}
+<!-- /section:basics/navbar.layout -->
+<div class="main-container" id="main-container">
+    <!-- #section:basics/sidebar -->
+    {{ template "admin/common/left.html"}}
+    <!-- /section:basics/sidebar -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div id="sidebar2" class="sidebar h-sidebar navbar-collapse collapse sidebar-fixed" data-sidebar="true" data-sidebar-hover="true">
+                <ul class="nav nav-list">
+                    <li>
+                        <a href="{{urlfor "AdminController.Add"}}">
+                            <o class="font12">添加</o>
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul><!-- /.nav-list -->
+            </div>
+            <div class="page-content">
+                <div class="row maintop">
+                    <div class="col-xs-12 col-sm-3">
+                        <form class="form-search" method="get">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="ace-icon fa fa-check"></i>
+                                </span>
+                                <input type="text" name="keyword" class="form-control search-query admin_sea" value="{{.Keyword}}" placeholder="输入需查询的用户名" />
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-xs  btn-purple">
+                                        <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                                        搜索
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="input-group-btn">
+                        <a href="{{ urlfor "AdminController.Index" }}">
+                            <button type="button" class="btn btn-xs  btn-purple">
+                                <span class="ace-icon fa fa-globe icon-on-right bigger-110"></span>
+                                显示全部
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div>
+                            <form id="leftnav" name="leftnav" method="post" action="" >
+                                <input type="hidden" name="checkk" id="checkk" value="1" /><!--用于判断操作类型-->
+                                <table width="100%" class="table table-striped table-bordered table-hover" id="dynamic-table">
+                                    <thead>
+                                    <tr>
+                                        <th width="10%">用户名</th>
+                                        <th width="12%">电话号码</th>
+                                        <th width="15%">上次登录时间</th>
+                                        <th width="10%">IP地址</th>
+                                        <th width="8%" style="border-right:#CCC solid 1px;">操作</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {{range $k,$v := .Data}}
+                                    <tr>
+                                        <td>{{$v.Name}}</td>
+                                        <td>{{$v.Tel}}</td>
+                                        <td>
+                                            {{if $v.LoginAt}}
+                                                {{ date $v.LoginAt }}
+                                            {{else}}
+                                                未登录
+                                            {{end}}
+                                        </td>
+                                        <td>{{$v.Ip}}</td>
+                                        <td>
+                                            <div class="hidden-sm hidden-xs action-buttons">
+                                                <a class="green" href="{{urlfor "AdminController.Edit" ":id" $v.Id}}" title="修改">
+                                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                </a>
+                                                <a class="red del" href="javascript:;" data-id="{{$v.Id}}">
+                                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {{end}}
+                                    <tr>
+                                        <td height="50" colspan="10" align="left">{{str2html .Page}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+    <script type="text/javascript">
+        $('.del').click(function(){
+            var id = $(this).attr('data-id');
+            var _xsrf = '{{.Xsrftoken}}';
+            var _method = 'delete';
+            layer.confirm('你确定要删除吗？', {icon: 3}, function (index) {
+                $.ajax({
+                    url:"{{urlfor "AdminController.Del"}}",
+                    type:'post',
+                    data:{id:id,_xsrf:_xsrf,_method:_method},
+                    timeout:10000,
+                    success: function(data){
+                        if(data.errcode == 0){
+                            layer.msg(data.msg, {icon:6,time:1000}, function(index){
+                                layer.close(index);
+                                location.reload();
+                            });
+                        }else{
+                            layer.msg(data.msg, {icon:5,time:3000}, function(index){
+                                layer.close(index);
+                            });
+                        }
+                    },
+                    error: function(responseText, statusText){
+                        if(statusText=='timeout'){
+                            layer.alert("请求超时");
+                        }else{
+                            layer.alert(statusText);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    {{ template "admin/common/footer.html"}}
+</div><!-- /.main-container -->
+</body>
+</html>
