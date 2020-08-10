@@ -25,6 +25,7 @@ func init() {
 		beego.NSRouter("/sys/admin/del", &Admin.AdminController{}, "post:Del"),
 		//菜单管理
 		beego.NSRouter("/sys/menu", &Admin.MenuController{}, "get:Index"),
+		beego.NSRouter("/sys/menu/add", &Admin.MenuController{}, "get,post:Add"),
 	)
 	beego.AddNamespace(nsadmin)
 }
