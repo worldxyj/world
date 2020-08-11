@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"time"
 )
 
 var DB *gorm.DB
@@ -29,6 +30,27 @@ func databaseInit() {
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return dbDtPrefix + defaultTableName
 	}
+	//UpdateAt修改为unix时间戳
+	DB.Callback().Update().Replace("gorm:update_time_stamp", func(scope *gorm.Scope) {
+		if _, ok := scope.Get("gorm:update_column"); !ok {
+			_ = scope.SetColumn("UpdatedAt", time.Now().Unix())
+		}
+	})
+	//CreatedAt修改为unix时间戳
+	DB.Callback().Create().Replace("gorm:update_time_stamp", func(scope *gorm.Scope) {
+		if !scope.HasError() {
+			if createdAtField, ok := scope.FieldByName("CreatedAt"); ok {
+				if createdAtField.IsBlank {
+					_ = createdAtField.Set(time.Now().Unix())
+				}
+			}
+			if updatedAtField, ok := scope.FieldByName("UpdatedAt"); ok {
+				if updatedAtField.IsBlank {
+					_ = updatedAtField.Set(time.Now().Unix())
+				}
+			}
+		}
+	})
 	//开启日志
 	//DB.LogMode(true)
 }

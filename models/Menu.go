@@ -8,6 +8,6 @@ type Menu struct {
 	Pid       uint
 	Sort      uint16
 	Status    uint8
-	CreatedAt uint
-	UpdatedAt uint
+	CreatedAt uint64
+	UpdatedAt uint64
 }
