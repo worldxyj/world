@@ -52,5 +52,8 @@ func databaseInit() {
 		}
 	})
 	//开启日志
-	//DB.LogMode(true)
+	dbLog, _ := beego.AppConfig.Bool("db_log")
+	if dbLog {
+		DB.LogMode(true)
+	}
 }

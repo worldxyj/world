@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/go-playground/validator/v10"
+	"html/template"
 	"reflect"
 	"strconv"
 	"strings"
@@ -52,11 +53,11 @@ func (this *MenuController) Add() {
 		Name   string `validate:"required,max=16" vmsg:"用户名必填且不能超过16个字符"`
 		Css    string `validate:"max=16" vmsg:"css不能超过16个字符"`
 		Url    string `validate:"required,max=32" vmsg:"路径必填且不能超过32个字符"`
-		Pid    uint   `validate:"numeric,len=10" vmsg:"请选择正确的父级"`
-		Sort   uint16 `validate:"numeric,len=5" vmsg:"请输入正确的排序"`
+		Pid    uint   `validate:"numeric" vmsg:"请选择正确的父级"`
+		Sort   uint16 `validate:"numeric,max=60000" vmsg:"请输入正确的排序"`
 		Status uint8  `validate:"oneof=0 1" vmsg:"请选择正确的状态"`
 	}
-	add := &AddValidate{
+	add := AddValidate{
 		Name:   name,
 		Css:    css,
 		Url:    url,
@@ -64,10 +65,10 @@ func (this *MenuController) Add() {
 		Sort:   uint16(sort),
 		Status: uint8(status),
 	}
-	err := validator.New().Struct(add)
+	err := validator.New().Struct(&add)
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
-			field, _ := reflect.TypeOf(add).Elem().FieldByName(err.Field())
+			field, _ := reflect.TypeOf(&add).Elem().FieldByName(err.Field())
 			vmsg := field.Tag.Get("vmsg")
 			this.Data["json"] = map[string]interface{}{"errcode": 1, "msg": vmsg}
 			this.ServeJSON()
@@ -87,6 +88,106 @@ func (this *MenuController) Add() {
 		this.Data["json"] = map[string]interface{}{"errcode": 0, "msg": "添加成功"}
 	} else {
 		this.Data["json"] = map[string]interface{}{"errcode": 1, "msg": "添加失败"}
+	}
+	this.ServeJSON()
+}
+
+func (this *MenuController) Edit() {
+	id, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
+	menu := models.Menu{Id: uint(id)}
+	result := core.DB.First(&menu).Error
+	if result != nil {
+		this.Data["content"] = "server error"
+		this.Abort("500")
+	}
+	if this.Ctx.Request.Method == "POST" {
+		name := this.GetString("name")
+		pid, _ := this.GetInt("pid")
+		css := this.GetString("css")
+		url := this.GetString("url")
+		sort, _ := this.GetInt("sort")
+		status, _ := this.GetInt("status")
+		type EditValidate struct {
+			Name   string `validate:"required,max=16" vmsg:"用户名必填且不能超过16个字符"`
+			Css    string `validate:"max=16" vmsg:"css不能超过16个字符"`
+			Url    string `validate:"required,max=32" vmsg:"路径必填且不能超过32个字符"`
+			Pid    uint   `validate:"numeric" vmsg:"请选择正确的父级"`
+			Sort   uint16 `validate:"numeric,max=60000" vmsg:"请输入正确的排序"`
+			Status uint8  `validate:"oneof=0 1" vmsg:"请选择正确的状态"`
+		}
+		edit := EditValidate{
+			Name:   name,
+			Css:    css,
+			Url:    url,
+			Pid:    uint(pid),
+			Sort:   uint16(sort),
+			Status: uint8(status),
+		}
+		err := validator.New().Struct(&edit)
+		if err != nil {
+			for _, err := range err.(validator.ValidationErrors) {
+				field, _ := reflect.TypeOf(&edit).Elem().FieldByName(err.Field())
+				vmsg := field.Tag.Get("vmsg")
+				this.Data["json"] = map[string]interface{}{"errcode": 1, "msg": vmsg}
+				this.ServeJSON()
+				this.StopRun()
+			}
+		}
+		menu := models.Menu{
+			Id:     uint(id),
+			Name:   name,
+			Css:    css,
+			Url:    url,
+			Pid:    uint(pid),
+			Sort:   uint16(sort),
+			Status: uint8(status),
+		}
+		result := core.DB.Save(&menu).Error
+		if result == nil {
+			this.Data["json"] = map[string]interface{}{"errcode": 0, "msg": "修改成功"}
+		} else {
+			this.Data["json"] = map[string]interface{}{"errcode": 1, "msg": "修改失败"}
+		}
+		this.ServeJSON()
+	} else {
+		var menus []*models.Menu
+		core.DB.Order("sort").Find(&menus)
+		menusTemp := make([]interface{}, 0, 1000)
+		this.format(&menusTemp, menus, "— ", 0, 0, 0)
+		this.Data["Menus"] = menusTemp
+		this.Data["Data"] = menu
+		this.Data["Xsrftoken"] = template.HTML(this.XSRFFormHTML())
+		this.TplName = "admin/menu/edit.html"
+	}
+}
+
+func (this *MenuController) Del() {
+	id, _ := this.GetInt("id")
+	menu := models.Menu{Id: uint(id)}
+	result := core.DB.First(&menu).Error
+	if result != nil {
+		this.Data["json"] = map[string]interface{}{"errcode": 1, "msg": "未查询到记录"}
+		this.ServeJSON()
+		this.StopRun()
+	}
+	//删除子菜单
+	var pMenus []*models.Menu
+	var ppMenus []*models.Menu
+	core.DB.Where("pid = ?", id).Find(&pMenus)
+	for _, v := range pMenus {
+		core.DB.Where("pid = ?", v.Id).Find(&ppMenus)
+		for _, vv := range ppMenus {
+			core.DB.Where("pid = ?", vv.Id).Delete(models.Menu{})
+		}
+		core.DB.Where("pid = ?", v.Id).Delete(models.Menu{})
+	}
+	core.DB.Where("pid = ?", id).Delete(models.Menu{})
+	//删除菜单
+	result = core.DB.Delete(&menu).Error
+	if result == nil {
+		this.Data["json"] = map[string]interface{}{"errcode": 0, "msg": "删除成功"}
+	} else {
+		this.Data["json"] = map[string]interface{}{"errcode": 1, "msg": "删除失败"}
 	}
 	this.ServeJSON()
 }
@@ -118,11 +219,9 @@ func (this *MenuController) Order() {
 	var sqlWhenThen string
 	param := this.Ctx.Request.Form
 	delete(param, "_xsrf")
-	var k2i, v2i int
+	r := strings.NewReplacer(`'`, `\'`, `"`, `\"`, `\`, `\\`)
 	for k, v := range this.Ctx.Request.Form {
-		k2i, _ = strconv.Atoi(k)
-		v2i, _ = strconv.Atoi(v[0])
-		temp := " when " + strconv.Itoa(k2i) + " then " + strconv.Itoa(v2i)
+		temp := " when " + r.Replace(k) + " then " + r.Replace(v[0])
 		sqlWhenThen += temp
 	}
 	table := prefix + "menu"

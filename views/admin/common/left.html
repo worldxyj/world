@@ -11,164 +11,32 @@
 
                         <b class="arrow"></b>
                     </li>
-                    {{/*<li><!--open代表打开状态-->
-                        <a href="#" class="dropdown-toggle">
-                            <i class="menu-icon fa fa-cog"></i>
-                            <span class="menu-text">学校设置</span>
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <b class="arrow"></b>
-                        <ul class="submenu">
-                            <li>
-                                <a href="http://www.nsface.com/chiying/config/index">
+                    {{$menu := menu}}
+                    {{range $v := $menu}}
+                        {{if compare $v.Pid 0}}
+                        <li><!--open代表打开状态-->
+                            <a href="#" class="dropdown-toggle">
+                                <i class="menu-icon fa {{$v.Css}}"></i>
+                                <span class="menu-text">{{$v.Name}}</span>
+                                <b class="arrow fa fa-angle-down"></b>
+                            </a>
+                            <b class="arrow"></b>
+                            <ul class="submenu">
+                            {{range $vv := $menu}}
+                                {{if compare $vv.Pid $v.Id}}
+                                <li>
+                                <a href="/{{config "String" "backendUri" "admin"}}/{{$vv.Url}}">
                                     <i class="menu-icon fa fa-caret-right"></i>
-                                    基本设置
+                                    {{$vv.Name}}
                                 </a>
                                 <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="http://www.nsface.com/chiying/config/attence">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    考勤设置
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><!--open代表打开状态-->
-                        <a href="#" class="dropdown-toggle">
-                            <i class="menu-icon fa fa-building"></i>
-                            <span class="menu-text">班级管理</span>
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <b class="arrow"></b>
-                        <ul class="submenu">
-                            <li>
-                                <a href="http://www.nsface.com/chiying/depart/index">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    班级列表
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="http://www.nsface.com/chiying/depart/grade">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    年级列表
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><!--open代表打开状态-->
-                        <a href="#" class="dropdown-toggle">
-                            <i class="menu-icon fa fa-users"></i>
-                            <span class="menu-text">用户管理</span>
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <b class="arrow"></b>
-                        <ul class="submenu">
-                            <li>
-                                <a href="http://www.nsface.com/chiying/user/student">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    学生列表
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="http://www.nsface.com/chiying/user/face">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    人脸照片
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="http://www.nsface.com/chiying/user/parent">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    家长列表
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><!--open代表打开状态-->
-                        <a href="#" class="dropdown-toggle">
-                            <i class="menu-icon fa fa-video-camera"></i>
-                            <span class="menu-text">设备管理</span>
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <b class="arrow"></b>
-                        <ul class="submenu">
-                            <li>
-                                <a href="http://www.nsface.com/chiying/device/index">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    人脸识别
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><!--open代表打开状态-->
-                        <a href="#" class="dropdown-toggle">
-                            <i class="menu-icon fa fa-bars"></i>
-                            <span class="menu-text">考勤管理</span>
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <b class="arrow"></b>
-                        <ul class="submenu">
-                            <li>
-                                <a href="http://www.nsface.com/chiying/attence/depart">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    班级考勤
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="http://www.nsface.com/chiying/attence/index">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    识别记录
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="http://www.nsface.com/chiying/attence/attenceCount">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    考勤记录
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        </ul>
-                    </li>*/}}
-                    <li><!--open代表打开状态-->
-                        <a href="#" class="dropdown-toggle">
-                            <i class="menu-icon fa fa-cogs"></i>
-                            <span class="menu-text">系统设置</span>
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <b class="arrow"></b>
-                        <ul class="submenu">
-                            <li>
-                                <a href="{{urlfor "AdminController.Index"}}">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    管理员列表
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="{{urlfor "MenuController.Index"}}">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    菜单管理
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            {{/*<li>
-                                <a href="http://www.nsface.com/chiying/sys/role">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    角色管理
-                                </a>
-                                <b class="arrow"></b>
-                            </li>*/}}
-                        </ul>
-                    </li>
+                                </li>
+                                {{end}}
+                            {{end}}
+                            </ul>
+                        </li>
+                        {{end}}
+                    {{end}}
                 </ul>
                 <!-- #section:basics/sidebar.layout.minimize -->
                 <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">

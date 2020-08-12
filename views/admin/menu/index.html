@@ -18,7 +18,7 @@
                                 <select name="pid">
                                     <option value="0">--默认顶级--</option>
                                     {{range .Data}}
-                                    <option value=".model.Id" style="margin-left:55px;">{{.leftHtml}}{{.model.Name}}</option>
+                                    <option value="{{.model.Id}}" style="margin-left:55px;">{{.leftHtml}}{{.model.Name}}</option>
                                     {{end}}
                                 </select>
                             </small>
@@ -83,7 +83,7 @@
                                         <td><input name="{{.model.Id}}" value="{{.model.Sort}}" class="list_order"/></td>
                                         <td>
                                             <div class="action-buttons">
-                                                <a class="green" href="" title="修改">
+                                                <a class="green" href="{{urlfor "MenuController.Edit" ":id" .model.Id}}" title="修改">
                                                     <i class="ace-icon fa fa-pencil bigger-130"></i>
                                                 </a>
                                                 <a class="red del" href="javascript:;" data-id="{{.model.Id}}" title="删除">
@@ -173,7 +173,7 @@
                             var xsrf = '{{.Xsrftoken}}';
                             layer.confirm('你确定要删除吗？', {icon: 3}, function (index) {
                                 layer.close(index);
-                                $.post('{{urlfor "MenuController.del"}}',
+                                $.post('{{urlfor "MenuController.Del"}}',
                                     {
                                         id: id,
                                         _xsrf: xsrf,
