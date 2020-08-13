@@ -12,8 +12,8 @@ func viewFunctions() {
 	beego.AddFuncMap("menu", menu)
 }
 
-func date(intTime int64) string {
-	return time.Unix(intTime, 0).Format("2006-01-02 15:04:05")
+func date(intTime uint) string {
+	return time.Unix(int64(intTime), 0).Format("2006-01-02 15:04:05")
 }
 
 func menu(uri string) map[string]interface{} {

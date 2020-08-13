@@ -47,7 +47,7 @@ func (this *LoginController) Index() {
 		}
 		//记录ip和登录时间
 		admin.Ip = this.Ctx.Input.IP()
-		admin.LoginAt = time.Now().Unix()
+		admin.LoginAt = uint(time.Now().Unix())
 		core.DB.Save(&admin)
 		this.SetSession("AdminId", admin.Id)
 		this.SetSession("AdminInfo", admin)

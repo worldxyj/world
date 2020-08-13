@@ -87,7 +87,7 @@ func (this *AdminController) Add() {
 			Name:      name,
 			Password:  fmt.Sprintf("%x", md5.Sum([]byte(password))),
 			Tel:       tel,
-			CreatedAt: time.Now().Unix(),
+			CreatedAt: uint(time.Now().Unix()),
 		}
 		result := core.DB.Create(&admin)
 		if result.Error == nil {
@@ -130,7 +130,7 @@ func (this *AdminController) Edit() {
 			}
 		}
 		admin := models.Admin{
-			Id: id,
+			Id: uint(id),
 		}
 		result := core.DB.First(&admin)
 		if result.Error != nil {
@@ -153,7 +153,7 @@ func (this *AdminController) Edit() {
 		this.ServeJSON()
 	} else {
 		admin := models.Admin{
-			Id: id,
+			Id: uint(id),
 		}
 		result := core.DB.First(&admin)
 		if result.Error != nil {
@@ -177,7 +177,7 @@ func (this *AdminController) Del() {
 		this.StopRun()
 	}
 	admin := models.Admin{
-		Id: id,
+		Id: uint(id),
 	}
 	result := core.DB.Where("id = ?", id).First(&admin)
 	if result.Error != nil {

@@ -30,6 +30,11 @@ func init() {
 		beego.NSRouter("/sys/menu/edit/:id", &Admin.MenuController{}, "get,post:Edit"),
 		beego.NSRouter("/sys/menu/state", &Admin.MenuController{}, "post:State"),
 		beego.NSRouter("sys/menu/order", &Admin.MenuController{}, "post:Order"),
+		//角色
+		beego.NSRouter("/sys/role/?:splat", &Admin.RoleController{}, "get:Index"),
+		beego.NSRouter("/sys/role/add", &Admin.RoleController{}, "get,post:Add"),
+		beego.NSRouter("/sys/role/del", &Admin.RoleController{}, "post:Del"),
+		beego.NSRouter("/sys/role/edit/:id", &Admin.RoleController{}, "get,post:Edit"),
 	)
 	beego.AddNamespace(nsadmin)
 }

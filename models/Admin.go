@@ -1,11 +1,11 @@
 package models
 
 type Admin struct {
-	Id        int
+	Id        uint
 	Name      string
 	Password  string
 	Tel       string
 	Ip        string
-	LoginAt   int64
-	CreatedAt int64
+	LoginAt   uint
+	CreatedAt uint
 }

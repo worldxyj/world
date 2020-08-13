@@ -49,7 +49,7 @@ func (this *IndexController) EditPwd() {
 		}
 		//验证原密码
 		admin := models.Admin{
-			Id: this.AdminId,
+			Id: uint(this.AdminId),
 		}
 		result := core.DB.First(&admin)
 		if result.Error != nil {
