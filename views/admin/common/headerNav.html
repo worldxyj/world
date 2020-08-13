@@ -1,0 +1,16 @@
+{{$menu := menu .Uri}}
+{{$len := len $menu.dataNav}}
+{{if gt $len 0 }}
+    <div id="sidebar2" class="sidebar h-sidebar navbar-collapse collapse">
+        <ul class="nav nav-list">
+            {{range $v := $menu.dataNav}}
+            <li {{if compare $v.Url $menu.third}}class="active"{{end}}>
+                <a href="/{{config "String" "backendUri" "admin"}}/{{$v.Url}}">
+                    <o class="font12">{{$v.Name}}</o>
+                </a>
+                <b class="arrow"></b>
+            </li>
+            {{end}}
+        </ul><!-- /.nav-list -->
+    </div><!-- .sidebar -->
+{{end}}

@@ -2,7 +2,7 @@
 <!-- /section:basics/navbar.layout -->
 <div class="main-container" id="main-container">
     <!-- #section:basics/sidebar -->
-    {{ template "admin/common/left.html"}}
+    {{ template "admin/common/left.html" .}}
     <!-- /section:basics/sidebar -->
     <div class="main-content">
         <div class="main-content-inner">
@@ -163,6 +163,7 @@
                                         }else{
                                             now.html('<button class="btn btn-minier btn-yellow">显示</button>');
                                         }
+                                        window.location.reload();
                                     }
                                 }
                             );

@@ -3,7 +3,8 @@
         <div class="nav-wrap">
             <div style="position: relative; top: 0px; transition-property: top; transition-duration: 0.2s;">
                 <ul class="nav nav-list">
-                    <li class="">
+                    {{$menu := menu .Uri}}
+                    <li>
                         <a href="{{urlfor "IndexController.Index"}}">
                             <i class="menu-icon fa fa-tachometer"></i>
                             <span class="menu-text"> 首页 </span>
@@ -11,10 +12,9 @@
 
                         <b class="arrow"></b>
                     </li>
-                    {{$menu := menu}}
-                    {{range $v := $menu}}
+                    {{range $v := $menu.data}}
                         {{if compare $v.Pid 0}}
-                        <li><!--open代表打开状态-->
+                        <li {{if compare $v.Url $menu.first}}class="active open"{{end}}><!--open代表打开状态-->
                             <a href="#" class="dropdown-toggle">
                                 <i class="menu-icon fa {{$v.Css}}"></i>
                                 <span class="menu-text">{{$v.Name}}</span>
@@ -22,9 +22,9 @@
                             </a>
                             <b class="arrow"></b>
                             <ul class="submenu">
-                            {{range $vv := $menu}}
+                            {{range $vv := $menu.data}}
                                 {{if compare $vv.Pid $v.Id}}
-                                <li>
+                                <li {{if compare $vv.Url $menu.second}}class="active"{{end}}>
                                 <a href="/{{config "String" "backendUri" "admin"}}/{{$vv.Url}}">
                                     <i class="menu-icon fa fa-caret-right"></i>
                                     {{$vv.Name}}

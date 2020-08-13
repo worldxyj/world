@@ -40,4 +40,6 @@ func (this *BaseController) Prepare() {
 	}
 	AdminInfo := this.GetSession("AdminInfo")
 	this.Data["AdminInfo"] = AdminInfo
+	//菜单状态
+	this.Data["Uri"] = this.Ctx.Request.RequestURI
 }
