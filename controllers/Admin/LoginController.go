@@ -50,6 +50,7 @@ func (this *LoginController) Index() {
 		admin.LoginAt = uint(time.Now().Unix())
 		core.DB.Save(&admin)
 		this.SetSession("AdminId", admin.Id)
+		this.SetSession("RoleId", admin.RoleId)
 		this.SetSession("AdminInfo", admin)
 		this.Data["json"] = map[string]interface{}{"errcode": 0, "msg": "登录成功"}
 		this.ServeJSON()

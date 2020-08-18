@@ -109,14 +109,52 @@ func (this *RoleController) format(data *[]interface{}, menus []*models.Menu, le
 	}
 }
 
-//todo
 func (this *RoleController) Edit() {
+	id, _ := this.GetInt(":id")
+	role := models.Role{}
+	result := core.DB.Where("id = ?", id).First(&role).Error
+	if result != nil {
+		this.Abort("404")
+	}
 	if this.Ctx.Request.Method == "POST" {
-
+		name := this.GetString("name")
+		menuIds := this.GetStrings("menu_ids[]")
+		if name == "" || len(name) > 32 {
+			this.Data["json"] = map[string]interface{}{"errcode": 1, "msg": "角色名称不能为空且不能超过32个字符"}
+			this.ServeJSON()
+			this.StopRun()
+		}
+		if len(menuIds) == 0 {
+			this.Data["json"] = map[string]interface{}{"errcode": 1, "msg": "请选择菜单"}
+			this.ServeJSON()
+			this.StopRun()
+		}
+		core.DB.Model(&role).Update("name", name)
+		core.DB.Where("role_id = ?", id).Delete(&models.RoleMenu{})
+		var roleMenu models.RoleMenu
+		var menuId int
+		for _, v := range menuIds {
+			menuId, _ = strconv.Atoi(v)
+			roleMenu = models.RoleMenu{
+				RoleId: role.Id,
+				MenuId: uint(menuId),
+			}
+			core.DB.Create(&roleMenu)
+		}
+		this.Data["json"] = map[string]interface{}{"errcode": 0, "msg": "修改成功"}
+		this.ServeJSON()
 	} else {
-		id, _ := this.GetInt(":id")
-		role := models.Role{}
-		core.DB.Where("id = ?", id).First(&role)
+		var menuId []uint
+		core.DB.Model(&models.RoleMenu{}).Where("role_id = ?", id).Pluck("menu_id", &menuId)
+		var menus []*models.Menu
+		core.DB.Order("sort").Find(&menus)
+		var data []interface{}
+		this.format(&data, menus, "— ", 0, 0, 0)
+		this.Data["role"] = role
+		this.Data["menuId"] = menuId
+		this.Data["data"] = data
+		this.Data["xsrftoken"] = template.HTML(this.XSRFFormHTML())
+		this.TplName = "admin/role/edit.html"
 	}
 }
 

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"github.com/astaxie/beego"
 	"strings"
 	"time"
@@ -10,13 +11,17 @@ import (
 func viewFunctions() {
 	beego.AddFuncMap("date", date)
 	beego.AddFuncMap("menu", menu)
+	beego.AddFuncMap("inSliceUint", inSliceUint)
 }
 
 func date(intTime uint) string {
 	return time.Unix(int64(intTime), 0).Format("2006-01-02 15:04:05")
 }
 
-func menu(uri string) map[string]interface{} {
+//todo
+func menu(uri string, roleId interface{}, adminId interface{}) map[string]interface{} {
+	adminIdUint, _ := adminId.(uint)
+	fmt.Println(adminIdUint)
 	var menus []*models.Menu
 	DB.Where("status = 1").Order("sort").Find(&menus)
 	uriSlice := strings.Split(uri, "/")
@@ -51,4 +56,13 @@ func menu(uri string) map[string]interface{} {
 		"second":  second,
 		"third":   third,
 	}
+}
+
+func inSliceUint(s uint, slice []uint) bool {
+	for _, v := range slice {
+		if v == s {
+			return true
+		}
+	}
+	return false
 }

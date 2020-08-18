@@ -1,4 +1,4 @@
-{{$menu := menu .Uri}}
+{{$menu := menu .Uri .RoleId .AdminId}}
 {{$len := len $menu.dataNav}}
 {{if gt $len 0 }}
     <div id="sidebar2" class="sidebar h-sidebar navbar-collapse collapse">

@@ -16,6 +16,7 @@ func (this *BaseController) Prepare() {
 	this.SetSession("AdminId", 1)
 	type AdminInfo1 struct {
 		Id        int
+		RoleId    uint
 		Name      string
 		Password  string
 		Tel       string
@@ -25,12 +26,14 @@ func (this *BaseController) Prepare() {
 	}
 	adminInfo1 := &AdminInfo1{
 		Id:       1,
+		RoleId:   10,
 		Name:     "模拟登陆",
 		Password: "e10adc3949ba59abbe56e057f20f883e",
 		Tel:      "13839958207",
 		Ip:       "127.0.0.1",
 	}
 	this.SetSession("AdminInfo", adminInfo1)
+	this.SetSession("RoleId", uint(10))
 
 	AdminId := this.GetSession("AdminId")
 	this.AdminId, ok = AdminId.(int)
@@ -42,4 +45,6 @@ func (this *BaseController) Prepare() {
 	this.Data["AdminInfo"] = AdminInfo
 	//菜单状态
 	this.Data["Uri"] = this.Ctx.Request.RequestURI
+	this.Data["RoleId"] = this.GetSession("RoleId")
+	this.Data["AdminId"] = this.GetSession("AdminId")
 }

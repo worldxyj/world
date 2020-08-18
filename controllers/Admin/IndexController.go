@@ -15,6 +15,10 @@ type IndexController struct {
 }
 
 func (this *IndexController) Index() {
+	var count int
+	var admins []*models.Admin
+	core.DB.Find(&admins).Count(&count)
+	this.Data["count"] = count
 	this.TplName = "admin/index/index.html"
 }
 

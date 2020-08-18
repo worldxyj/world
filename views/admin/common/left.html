@@ -3,7 +3,7 @@
         <div class="nav-wrap">
             <div style="position: relative; top: 0px; transition-property: top; transition-duration: 0.2s;">
                 <ul class="nav nav-list">
-                    {{$menu := menu .Uri}}
+                    {{$menu := menu .Uri .RoleId .AdminId}}
                     <li>
                         <a href="{{urlfor "IndexController.Index"}}">
                             <i class="menu-icon fa fa-tachometer"></i>

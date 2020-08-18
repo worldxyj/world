@@ -22,6 +22,21 @@
                         <form class="form-horizontal" method="post">
                             {{ .Xsrfdata }}
                             <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">所属角色</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <select name="role_id"  class="col-sm-3">
+                                            <option value="">请选择所属角色</option>
+                                            {{range $v := .roles}}
+                                                <option value="{{$v.Id}}" {{if compare $v.Id $.Data.RoleId}}selected{{end}}>{{$v.Name}}</option>
+                                            {{end}}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+
+                            <div class="form-group">
                                 <label class="control-label col-xs-12 col-sm-3 no-padding-right">用户名</label>
                                 <div class="col-xs-12 col-sm-9">
                                     <div class="clearfix">
