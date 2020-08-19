@@ -33,3 +33,6 @@
 - 菜单管理
 
 > ![菜单管理](static/readme/menu.png)
+
+## 默认账号
+用户名admin，密码123456
