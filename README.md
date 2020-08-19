@@ -24,7 +24,7 @@
 
 - 登录
 
-> ![首页](static/readme/login.png)
+> ![登录](static/readme/login.png)
 
 - 首页
 
@@ -32,4 +32,4 @@
 
 - 菜单管理
 
-> ![首页](static/readme/menu.png)
+> ![菜单管理](static/readme/menu.png)
