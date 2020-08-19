@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50723
 File Encoding         : 65001
 
-Date: 2020-08-13 18:14:23
+Date: 2020-08-19 14:54:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,13 +30,13 @@ CREATE TABLE `w_admin` (
   `created_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_password` (`name`,`password`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_admin
 -- ----------------------------
-INSERT INTO `w_admin` VALUES ('1', '0', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '13839958207', '127.0.0.1', '1593324826', '1562057575');
-INSERT INTO `w_admin` VALUES ('13', '0', '测试', 'e10adc3949ba59abbe56e057f20f883e', '11111111111', '', '0', '1596621542');
+INSERT INTO `w_admin` VALUES ('1', '10', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '', '127.0.0.1', '1597820008', '1562057575');
+INSERT INTO `w_admin` VALUES ('13', '11', '测试', 'e10adc3949ba59abbe56e057f20f883e', '', '127.0.0.1', '1597816947', '1596621542');
 
 -- ----------------------------
 -- Table structure for w_admin_role
@@ -70,7 +70,7 @@ CREATE TABLE `w_menu` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `url` (`url`) USING BTREE,
   KEY `sort` (`sort`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_menu
@@ -109,12 +109,13 @@ CREATE TABLE `w_role` (
   `name` varchar(32) NOT NULL DEFAULT '',
   `created_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_role
 -- ----------------------------
 INSERT INTO `w_role` VALUES ('10', '超级管理员', '1597311836');
+INSERT INTO `w_role` VALUES ('11', '网站管理员', '1597717035');
 
 -- ----------------------------
 -- Table structure for w_role_menu
@@ -126,20 +127,24 @@ CREATE TABLE `w_role_menu` (
   `menu_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `role_id` (`role_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_role_menu
 -- ----------------------------
-INSERT INTO `w_role_menu` VALUES ('104', '10', '56');
-INSERT INTO `w_role_menu` VALUES ('105', '10', '57');
-INSERT INTO `w_role_menu` VALUES ('106', '10', '58');
-INSERT INTO `w_role_menu` VALUES ('107', '10', '1');
-INSERT INTO `w_role_menu` VALUES ('108', '10', '2');
-INSERT INTO `w_role_menu` VALUES ('109', '10', '3');
-INSERT INTO `w_role_menu` VALUES ('110', '10', '5');
-INSERT INTO `w_role_menu` VALUES ('111', '10', '4');
-INSERT INTO `w_role_menu` VALUES ('112', '10', '55');
+INSERT INTO `w_role_menu` VALUES ('162', '10', '56');
+INSERT INTO `w_role_menu` VALUES ('163', '10', '57');
+INSERT INTO `w_role_menu` VALUES ('164', '10', '1');
+INSERT INTO `w_role_menu` VALUES ('165', '10', '2');
+INSERT INTO `w_role_menu` VALUES ('166', '10', '3');
+INSERT INTO `w_role_menu` VALUES ('167', '10', '5');
+INSERT INTO `w_role_menu` VALUES ('168', '10', '4');
+INSERT INTO `w_role_menu` VALUES ('169', '10', '55');
+INSERT INTO `w_role_menu` VALUES ('170', '11', '56');
+INSERT INTO `w_role_menu` VALUES ('171', '11', '57');
+INSERT INTO `w_role_menu` VALUES ('172', '11', '1');
+INSERT INTO `w_role_menu` VALUES ('173', '11', '3');
+INSERT INTO `w_role_menu` VALUES ('174', '11', '5');
 
 -- ----------------------------
 -- Table structure for w_role_permission

@@ -18,15 +18,18 @@ func date(intTime uint) string {
 	return time.Unix(int64(intTime), 0).Format("2006-01-02 15:04:05")
 }
 
-//todo
 func menu(uri string, roleId interface{}, adminId interface{}) map[string]interface{} {
-	adminIdUint, _ := adminId.(uint)
-	fmt.Println(adminIdUint)
+	adminIdInt, _ := adminId.(uint)
 	var menus []*models.Menu
-	DB.Where("status = 1").Order("sort").Find(&menus)
+	if adminIdInt == 1 {
+		DB.Where("status = 1").Order("sort").Find(&menus)
+	} else {
+		dbPrefix := beego.AppConfig.String("db_dt_prefix")
+		DB.Table(dbPrefix+"menu").Joins(fmt.Sprintf("join %s on %s = %s", dbPrefix+"role_menu", dbPrefix+"role_menu.menu_id", dbPrefix+"menu.id")).Where(dbPrefix+"role_menu.role_id = ?", roleId).Select(dbPrefix + "menu.*").Find(&menus)
+	}
 	uriSlice := strings.Split(uri, "/")
 	var first, second, third string
-	if len(uriSlice) > 2 && len(uriSlice) < 5 {
+	if len(uriSlice) > 3 && len(uriSlice) < 5 {
 		first = uriSlice[2]
 		second = first + "/" + uriSlice[3]
 	} else if len(uriSlice) > 4 {

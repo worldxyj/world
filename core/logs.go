@@ -10,12 +10,9 @@ import (
 func logsInit() {
 	logConf := make(map[string]interface{})
 	logConf["filename"] = beego.AppConfig.String("logfilename")
+	logConf["maxlines"] = 100000
 	logConf["separate"] = strings.Split(beego.AppConfig.String("logseparate"), ",")
-	if beego.AppConfig.String("runmode") == "dev" {
-		logConf["level"] = 1
-	} else {
-		logConf["level"], _ = beego.AppConfig.Int("loglevel")
-	}
+	logConf["level"], _ = beego.AppConfig.Int("loglevel")
 	logConf["daily"] = true
 	logConf["maxdays"] = 7
 	confJson, _ := json.Marshal(logConf)
