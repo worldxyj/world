@@ -5,6 +5,8 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	//_ "github.com/jinzhu/gorm/dialects/postgres"
+	//_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"time"
 )
 
@@ -17,9 +19,18 @@ func databaseInit() {
 	dbHost := beego.AppConfig.String(dbType + "::db_host")
 	dbPort := beego.AppConfig.String(dbType + "::db_port")
 	dbName := beego.AppConfig.String(dbType + "::db_name")
-	openConf := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", dbUser, dbPwd, dbHost, dbPort, dbName)
+	dbCharset := beego.AppConfig.String(dbType + "::db_charset")
+	var openConf string
+	if dbType == "mysql" {
+		openConf = fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=%s&parseTime=True&loc=Local", dbUser, dbPwd, dbHost, dbPort, dbName, dbCharset)
+	} else if dbType == "postgres" {
+		openConf = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", dbHost, dbPort, dbUser, dbName, dbPwd)
+	} else if dbType == "sqlite3" {
+		openConf = dbName
+	}
+
 	var err error
-	DB, err = gorm.Open("mysql", openConf)
+	DB, err = gorm.Open(dbType, openConf)
 	if err != nil {
 		panic(err)
 	}
