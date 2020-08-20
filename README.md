@@ -34,5 +34,8 @@
 
 > ![菜单管理](static/readme/menu.png)
 
-## 默认账号
+## 登录方式
+
+后台地址http://localhost:8080/admin
+
 用户名admin，密码123456
