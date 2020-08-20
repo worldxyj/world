@@ -27,6 +27,8 @@ func databaseInit() {
 		openConf = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", dbHost, dbPort, dbUser, dbName, dbPwd)
 	} else if dbType == "sqlite3" {
 		openConf = dbName
+	} else {
+		panic("数据库类型错误")
 	}
 
 	var err error
